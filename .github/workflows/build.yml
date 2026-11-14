@@ -1,18 +1,15 @@
 
-name: Angular and Java CI Pipeline
+name: Angular and Java CI
 
 on:
   push:
     branches:
       - angular-code
       - java-code
-
   workflow_dispatch:
 
 jobs:
-
   angular-build:
-    name: Angular Application Build
     if: github.ref == 'refs/heads/angular-code'
     runs-on: ubuntu-latest
 
@@ -20,25 +17,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: 22
 
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build Angular
+      - name: Angular Build
         run: npm run build
 
-      - name: Upload Angular Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: angular-build
-          path: dist/
-
   java-build:
-    name: Java Application Build
     if: github.ref == 'refs/heads/java-code'
     runs-on: ubuntu-latest
 
@@ -50,17 +40,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
-          cache: maven
+          java-version: 17
 
-      - name: Build Java Application
+      - name: Maven Build
         run: mvn clean package
-
-      - name: Upload Java Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: java-build
-          path: target/*.jar
-
-
-
