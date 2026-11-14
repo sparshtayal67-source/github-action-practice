@@ -1,0 +1,24 @@
+
+name: Run GitLab Code
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone GitLab Repository
+        run: |
+          git clone https://gitlab.com/USERNAME/REPOSITORY.git
+          cd REPOSITORY
+
+      - name: Run Code
+        run: |
+          cd REPOSITORY
+          ls -la
+          # Yahan apni build/run commands likhein
