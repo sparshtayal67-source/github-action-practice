@@ -1,0 +1,64 @@
+
+name: Angular and Java Build Pipeline
+
+on:
+  push:
+    branches:
+      - angular-code
+      - java-code
+
+  workflow_dispatch:
+
+jobs:
+
+  angular-build:
+    name: Angular Build
+    if: github.ref == 'refs/heads/angular-code'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Angular Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Angular Application
+        run: npm run build
+
+      - name: Upload Angular Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-build
+          path: dist/
+
+  java-build:
+    name: Java Maven Build
+    if: github.ref == 'refs/heads/java-code'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Java Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build Java Application
+        run: mvn -B clean package
+
+      - name: Upload Java JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-build
+          path: target/*.jar
