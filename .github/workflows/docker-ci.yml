@@ -1,0 +1,38 @@
+
+name: Docker CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-job:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Docker
+        run: |
+          echo "This build is done using Docker build command"
+
+  test-job:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build-job
+    steps:
+      - name: Test Docker Build
+        run: |
+          echo "This is testing of our Docker build"
+
+  push-job:
+    name: Push
+    runs-on: ubuntu-latest
+    needs: test-job
+    steps:
+      - name: Push to Docker Hub
+        run: |
+          echo "This is pushing to Docker Hub"
